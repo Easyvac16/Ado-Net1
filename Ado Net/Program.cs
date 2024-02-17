@@ -27,10 +27,17 @@ namespace Ado_Net
                 Console.WriteLine("3. Відобразити усі середні оцінки.");
                 Console.WriteLine("4. Показати ПІБ усіх студентів з мінімальною оцінкою, більшою, ніж зазначена.");
                 Console.WriteLine("5. Показати назви усіх предметів із мінімальними середніми оцінками.");
+                Console.WriteLine("6. Показати мінімальну середню оцінку.");
+                Console.WriteLine("7. Показати максимальну середню оцінку.");
+                Console.WriteLine("8. Показати кількість студентів з мінімальною середньою оцінкою з математики.");
+                Console.WriteLine("9. Показати кількість студентів, в яких максимальна середня оцінка з математики.");
+                Console.WriteLine("10. Показати кількість студентів у кожній групі.");
+                Console.WriteLine("11. Показати середню оцінку групи.");
                 Console.WriteLine("0. Вийти з програми");
 
                 Console.Write("Виберіть опцію: ");
                 choice = int.Parse(Console.ReadLine());
+
 
                 using (SqlConnection connection = new SqlConnection(ConnectionString))
                 {
@@ -54,6 +61,24 @@ namespace Ado_Net
                                 break;
                             case 5:
                                 DisplaySubjectsWithMinAverageGrades(connection);
+                                break;
+                            case 6:
+                                DisplayMinAverageGrade(connection);
+                                break;
+                            case 7:
+                                DisplayMaxAverageGrade(connection);
+                                break;
+                            case 8:
+                                DisplayStudentsWithMinMathGradeCount(connection);
+                                break;
+                            case 9:
+                                DisplayStudentsWithMaxMathGradeCount(connection);
+                                break;
+                            case 10:
+                                DisplayStudentsInEachGroupCount(connection);
+                                break;
+                            case 11:
+                                DisplayAverageGradeForEachGroup(connection);
                                 break;
                             case 0:
                                 Console.WriteLine("Poka!");
@@ -157,6 +182,85 @@ namespace Ado_Net
                     }
                 }
             }
+
+            static void DisplayMinAverageGrade(SqlConnection connection)
+            {
+                using (SqlCommand command = new SqlCommand("SELECT MIN(AverageGrade) AS MinAverageGrade FROM StudentsGrades", connection))
+                {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"Мінімальна середня оцінка: {reader["MinAverageGrade"]}");
+                        Console.WriteLine("\t");
+                    }
+                }
+            }
+
+            static void DisplayMaxAverageGrade(SqlConnection connection)
+            {
+                using (SqlCommand command = new SqlCommand("SELECT MAX(AverageGrade) AS MaxAverageGrade FROM StudentsGrades", connection))
+                {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"Максимальна середня оцінка: {reader["MaxAverageGrade"]}");
+                        Console.WriteLine("\t");
+                    }
+                }
+            }
+
+            static void DisplayStudentsWithMinMathGradeCount(SqlConnection connection)
+            {
+                using (SqlCommand command = new SqlCommand("SELECT COUNT(*) AS StudentCount FROM StudentsGrades WHERE MinSubject = 'Математика' AND AverageGrade = (SELECT MIN(AverageGrade) FROM StudentsGrades)", connection))
+                {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"Кількість студентів з мінімальною середньою оцінкою з математики: {reader["StudentCount"]}");
+                        Console.WriteLine("\t");
+                    }
+                }
+            }
+
+            static void DisplayStudentsWithMaxMathGradeCount(SqlConnection connection)
+            {
+                using (SqlCommand command = new SqlCommand("SELECT COUNT(*) AS StudentCount FROM StudentsGrades WHERE MaxSubject = 'Математика' AND AverageGrade = (SELECT MAX(AverageGrade) FROM StudentsGrades)", connection))
+                {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"Кількість студентів з максимальною середньою оцінкою з математики: {reader["StudentCount"]}");
+                        Console.WriteLine("\t");
+                    }
+                }
+            }
+
+            static void DisplayStudentsInEachGroupCount(SqlConnection connection)
+            {
+                using (SqlCommand command = new SqlCommand("SELECT GroupName, COUNT(*) AS StudentCount FROM StudentsGrades GROUP BY GroupName", connection))
+                {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"Група: {reader["GroupName"]}, Кількість студентів: {reader["StudentCount"]}");
+                        Console.WriteLine("\t");
+                    }
+                }
+            }
+
+            static void DisplayAverageGradeForEachGroup(SqlConnection connection)
+            {
+                using (SqlCommand command = new SqlCommand("SELECT GroupName, AVG(AverageGrade) AS AverageGrade FROM StudentsGrades GROUP BY GroupName", connection))
+                {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        Console.WriteLine($"Група: {reader["GroupName"]}, Середня оцінка: {reader["AverageGrade"]}");
+                        Console.WriteLine("\t");
+                    }
+                }
+            }
+
 
         }
     }
