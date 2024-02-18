@@ -80,6 +80,12 @@ namespace Ado_Net
                             case 11:
                                 DisplayAverageGradeForEachGroup(connection);
                                 break;
+                            case 12:
+                                DisplayData(connection);
+                                break;
+                            case 13:
+                               DeleteData(connection);
+                                break;
                             case 0:
                                 Console.WriteLine("Poka!");
                                 break;
@@ -95,6 +101,62 @@ namespace Ado_Net
                 }
                 Thread.Sleep(5000);
             } while (choice != 0);
+
+
+
+            static void DisplayData(SqlConnection connection)
+            {
+                string dataQuery = "SELECT * FROM StudentsGrades";
+                using (SqlCommand command = new SqlCommand(dataQuery,connection))
+                {
+                    SqlDataReader reader = command.ExecuteReader();
+                    while (reader.Read()) 
+                    {
+                        Console.WriteLine($"ПІБ: {reader["FullName"]} Середня оцінка {reader["AverageGrade"]}");
+                    }
+                }
+            }
+            static void DeleteData(SqlConnection connection)
+            {
+                string dataQuery = "DELETE FROM StudentsGrades WHERE StudentID = 3";
+                using (SqlCommand command = new SqlCommand(dataQuery,connection))
+                {
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    Console.WriteLine($"Дані студента Grigoriev Dmytro Igorovich видалено {rowsAffected}");
+                    
+                }
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             /*using (SqlCommand cmd = new SqlCommand(queryAll, connection))

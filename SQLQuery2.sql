@@ -16,3 +16,7 @@ VALUES ('Grigoriev Dmytro Igorovich', 'Group 34', 4.5, 'Math', 'History');
 
 INSERT INTO StudentsGrades (FullName, GroupName, AverageGrade, MinSubject, MaxSubject)
 VALUES ('Petrenko Oleg Oleksandrovich', 'Group 24', 4.0, 'Physich', 'Math');
+
+DELETE FROM StudentsGrades WHERE StudentID = 1;
+
+SELECT * FROM StudentsGrades;
