@@ -104,7 +104,7 @@ namespace Ado_Net
 
 
 
-            static void DisplayData(SqlConnection connection)
+            /*static void DisplayData(SqlConnection connection)
             {
                 string dataQuery = "SELECT * FROM StudentsGrades";
                 using (SqlCommand command = new SqlCommand(dataQuery,connection))
@@ -127,7 +127,7 @@ namespace Ado_Net
                     
                 }
             }
-
+*/
 
 
 
